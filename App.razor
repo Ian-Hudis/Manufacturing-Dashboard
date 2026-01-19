@@ -1,0 +1,70 @@
+﻿<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <title>Change Log</title>
+            <p>>12/22/25: V5.3: The cycletime was still not zeroing correctly. Added a MachineCycletime and remade Loadtime.</p>
+            <p>>12/19/25: V5.2: The cycletime was not zeroing correctly when the kiosk times out.</p>
+            <p>>12/16/25: V5.2: Cycletime Change to fix capture issues.</p>
+            <p>>12/8/25: V5.2: Cycletime Change so a cycletime is recorded on timeout without messing with the part to part cycletime.</p>
+            <p>>12/8/25: V5.2: Overhaul of Grinder MTConnect reader software to make it more like the software for the rest of the machines. Further Testing is required.</p>
+            <p>>12/5/25: V5.2: Fix for the Grinder idle timer issue. It was not able to go through the timeout.</p>
+            <p>>11/17/25: V5.1: Fix for the loading log for bar loading machines. Also added a 10 second latency to 2102 and 2103 idle timer.</p>
+            <p>>11/7/25: V5.1: Final Testing and Release.</p>
+            <p>>11/6/25: V5.1: Alteration for logging the "Loading" event onto SQL for better tracking.</p>
+            <p>>11/3/25: V5.1: Correction for offline partcount for better kiosk/MTConnect syncronization.</p>
+            <p>>11/3/25: V5.1: Fix for Offline state of head 2 for CNC machines that have MTConnect Agents on the machine.</p>
+            <p>>9/22/25: V5.0: BDtronic Fix for reading offline after every part.</p>
+            <p>>9/18/25: V5.0: Finished debugging and tests. I also made it so Cycletime will still be captured if machine goes into idle/ready state in between parts.</p>
+            <p>>8/27/25: V5.0: Applied httpdirect method for improved performance. Individual sample query no longer available.</p>
+            <p>>8/8/25: V4.9 release: Added Commmenting Throughput. Also changed predictions board to include time left. Made Fixes to the predicitons Board as well so the estimates are always correct.</p>
+            <p>>7/8/25: Changed ip address for 2260</p>
+            <p>>6/18/25: V4.8: Added Recovery for ProgramMod</p>
+            <p>>6/13/25: V4.8: Got rid of shift change logs in SQL.</p>
+            <p>>6/9/25: Fix for cycletime calulator to prevent the dashboard from crashing.</p>
+            <p>>5/19/25: Fix to prevent the Grinder from spamming part = 0 in SQL</p>
+            <p>>4/1/25: Fixed Ready timeout issue. Added Memes.</p>
+            <p>>3/31/25: Fixed Work Center Time in state issue. Got the Setuptime factor to work.</p>
+            <p>>3/7/25: V4.7 release: Cycletime correction for head 2. Changed % speed conditions to punish no info 2. Feedhold now only shows when kiosk state is ready.</p>
+            <p>>2/28/25: V4.6 release: Added Setup Time calculator and a dashboard to see experimental features.</p>
+            <p>>2/26/25: V4.5: Added Cycletime calculations for the bandsaws, glue machine, and grinder. Made it so gantry machines can be handloaded and still get a cycletime if info 2 field is a non zero value. Added a loadtime calculation.</p>
+            <p>>2/24/25: Added 3112 Bandsaw</p>
+            <p>>2/11/25: Changed the data capture algorithm for 2321 Grinder due to reading inconsistency.</p>
+            <p>>2/3/25: V4.4: Repatch for the idle timer</p>
+            <p>>1/31/25: V4.4: Added SQL Logging for 3111 and 2321</p>
+            <p>>1/30/25: V4.3: Patch for the idle timer. Also updated systems from .NET6 to .NET8</p>
+            <p>>1/24/24: Added the 2321 Grinder</p>
+            <p>>1/13/24: V4.2 Rerelease: Present the data in a more readable way.</p>
+            <p>>1/6/24: V4.2 Release: Added Work Center Head 2</p>
+            <p>>12/6/24:   V4.1 Release: Fixed the loading issue in WC state time.</p>
+            <p>>11/21/24: Fix for BDtronic </p>
+            <p>>11/20/24: Added 3111 Bandsaw</p>
+            <p>>11/11/24: V4.0 Release: New MTConnect execution definitions such as offline, pgm_stop, and feed_hold</p>
+            <p>>10/3/24: V3.11 Release</p>
+            <p>>9/24/24: Added SQL logging to 2272 and 3321. Added 2272 PLC Server Search. Also Made thread count limit to prevent overclog issue. </p>
+            <p>>9/11/24: Adjusted the configeration as well as the apapter checking function to be able to handle more machines.</p>
+            <p>>9/10/24: Changed how the % speed is found. (Now uses Info 1 and Info 2)</p>
+            <p>>8/15/24: Added Machine 2272</p>
+            <p>>8/13/24: Added the 2105 path to know when its actually running.</p>
+            <p>>7/15/24: Added the Work Center State ></p>
+            <p>>7/2/24: Added Kiosk State Filtering. </p>
+            <p>>6/27/24: Added Machine 3321 and made it so material number comes from SAP only.</p>
+            <p>>6/24/24: Changed the machine names to the full title of the machine.</p>
+            <p>>6/13/24: ProgramMod logging patch and changed how base quantity effects Job Durtaion and Time Left</p>
+            <p>>6/04/24: Updated the progress sections so it uses the Machine Cycletime instead of the ideal cycletime</p>
+            <p>>5/31/24: Added the other SAP coming from the plc</p>
+            <p>>5/14/24: Added sql and plc functionality to 2112</p>
+            <p>>5/8/24 to 5/10/24: Patched the "Loading" definition issue</p>
+            <p>>4/11/24: Added Loadtimes from SAP INFO II to use</p>
+            <p>>4/10/24: Added percent Completion, percent speed, time completion estimates. Also made it so timespans over 24 hours will be diplayed in "X hours".</p>
+            <p>>4/2/24: Removed the Machine state autolog and replaced it with BeginShift Event</p>
+            <p>>3/18/24: SQL Database Change</p>
+            <p>>2/26/24: Renamed 2111 to 2111_1 and 2112 to 2111_2</p>
+            <p>> 2/15/24: Patched SQL Logging Module  </p>
+        </LayoutView>
+    </NotFound>
+</Router>
