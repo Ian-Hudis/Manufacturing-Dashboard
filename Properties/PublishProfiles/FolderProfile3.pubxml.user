@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\hudis\source\repos\MTConnectDashboard\Publish</_PublishTargetUrl>
+    <History>True|2023-12-12T13:48:39.0112992Z;True|2023-12-08T12:39:41.4894234-06:00;True|2023-12-08T12:38:49.7949795-06:00;True|2023-12-08T12:38:29.2944631-06:00;True|2023-11-14T09:08:10.2753050-06:00;True|2023-11-14T09:07:54.1914468-06:00;True|2023-11-14T09:00:37.1271068-06:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>
