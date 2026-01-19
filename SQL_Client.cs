@@ -455,7 +455,7 @@ namespace MTConnectDashboard
 
         private static SQL_Logger Export_To_SQL(SQL_Logger Data, string series, string tag, bool kioskeventchange)
         {
-            var cs = @"Server=DB-USMN-001\IN01;Database=ProductionMonitor; User ID=s4automation;Password=s4automation";
+            var cs = @"Server=SQL_Server_Name\IN01;Database=ProductionMonitor; User ID=SQL_ID;Password=SQL_Password";
 
             var con = new SqlConnection(cs);
             try
@@ -1072,3 +1072,4 @@ namespace MTConnectDashboard
 
     }
 }
+
