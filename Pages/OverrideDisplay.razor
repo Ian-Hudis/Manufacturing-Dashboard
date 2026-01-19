@@ -1,0 +1,202 @@
+﻿@page "/Override"
+
+@using MTConnectDashboard
+@inject MSR1_Service productService
+
+<style>
+    body {
+    background-color: rgb(240,255,250);
+    }
+</style>
+
+<PageTitle>Override Display</PageTitle>
+
+<div style="margin-left:5px; text-align:center;">
+    @if(msr1_column == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+
+        <RadzenGrid AllowFiltering="false" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" style="border: 1px solid #9999ff;background-color: #F0FFFA; display: inline-block; margin-top: 5px;"
+        rowRender="@RowRender" cellRender="@CellRender" HeaderCellRender="@HeaderFooterCellRender" FooterCellRender="@HeaderFooterCellRender" background-color:
+        PageSize="17" AllowSorting="true" Data="@msr1_column" TItem="MSR1_column" ColumnWidth="90px" mnColumnWidth="150px"  AllowColumnResize="true" AllowPaging="true">
+            <Columns>
+                <RadzenGridColumn TItem="MSR1_column" Property="MachineID" Title="Location" Width="90px" ></RadzenGridColumn>
+
+                <RadzenGridColumn TItem="MSR1_column" Property="Override" Title="" Width="6px"></RadzenGridColumn>
+                <RadzenGridColumn TItem="MSR1_column" Property="Rapid" Title="Head1 Rapid" Width="60px"></RadzenGridColumn>
+                <RadzenGridColumn TItem="MSR1_column" Property="Feed" Title="Head1 Feed" Width="60px"></RadzenGridColumn>
+                <RadzenGridColumn TItem="MSR1_column" Property="Spindle" Title="Head1 Spindle" Width="60px"></RadzenGridColumn>
+                <RadzenGridColumn TItem="MSR1_column" Property="Rapid2" Title="Head2 Rapid" Width="60px"></RadzenGridColumn>
+                <RadzenGridColumn TItem="MSR1_column" Property="Feed2" Title="Head2 Feed" Width="60px"></RadzenGridColumn>
+                <RadzenGridColumn TItem="MSR1_column" Property="Spindle2" Title="Head2 Spindle" Width="60px"></RadzenGridColumn>
+                <RadzenGridColumn TItem="MSR1_column" Property="Gantry" Title="Gantry" Width="60px"></RadzenGridColumn>
+
+            </Columns>
+        </RadzenGrid>
+
+    }
+</div>
+<button id="TableRefreshBUT" @onclick="OnInitializedAsync" hidden="true"> Refresh </button>
+
+@code {
+    IEnumerable<MSR1_column>? msr1_column;
+
+    protected override async Task OnInitializedAsync()
+    {
+        msr1_column = await Task.Run(() => productService.ProductList());
+    }
+
+
+    void RowRender(RowRenderEventArgs<MSR1_column> args)
+    {
+        args.Attributes.Add("style", $"font-weight: {("bold")};");
+        // args.Attributes.Add("style", $"font-weight: {(args.Data.MachineMode == "RUNNING" ? "bold" : "normal")};");
+    }
+
+    void CellRender(CellRenderEventArgs<MSR1_column> args)
+    {
+        switch (args.Column.Property)
+        {
+#pragma warning disable CS8604
+            case "MachineID": 
+
+                switch (args.Data.ProductionMonitorState)
+                {
+                    // make it green
+                    case "RUNNING":
+                        args.Attributes.Add("style", $"font-weight: {("730")};" +
+                            $"background-image: linear-gradient(180deg, #E0ffE5 0%, #78ff85 100%);"); // green
+                        break;
+                    case "LOADING": // the operator is loading a part
+                        args.Attributes.Add("style", $"font-weight: {("730")};" +
+                            $"background-image: linear-gradient(180deg, #E0ffE5 0%, #78ff85 100%);"); // green
+                        break;
+                    // make it yellow
+                    case "Setup":
+                        if (args.Data.MachineMode != "OFFLINE" || args.Data.MachineMode != "PGM_STOP" || args.Data.MachineMode != "INTERUPT")
+                        {
+                            args.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #fff9E0 0%, #ffff10 100%);"); // yellow
+                        }
+                        else
+                        {
+                            args.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #ffE0E0 0%, #FF4242 100%);"); // red
+                        }
+                        break;
+                    case "Insp/Tlch":
+                        if (args.Data.MachineMode != "OFFLINE" || args.Data.MachineMode != "PGM_STOP" || args.Data.MachineMode != "INTERUPT")
+                        {
+                            args.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #fff9E0 0%, #ffff10 100%);"); // yellow
+                        }
+                        else
+                        {
+                            args.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #ffE0E0 0%, #FF4242 100%);"); // red
+                        }
+                        break;
+                    case "Ready":
+                        if (args.Data.MachineMode != "OFFLINE" || args.Data.MachineMode != "PGM_STOP" || args.Data.MachineMode != "INTERUPT")
+                        {
+                            args.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #fff9E0 0%, #ffff10 100%);"); // yellow
+                        }
+                        else
+                        {
+                            args.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #ffE0E0 0%, #FF4242 100%);"); // red
+                        }
+                        break;
+                    // make it red
+                    default:
+                        args.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #ffE0E0 0%, #FF4242 100%);"); // red
+                        break;
+                }
+                break;
+            case "Override":
+                args.Attributes.Add("style", $"background-color: {(args.Data.Override != true ? "#7777ff" : "#FF4040")};");
+                break;
+            case "Rapid":
+                 try
+                {
+                    int rapid;
+                    if (args.Data.Rapid.Contains("UNAVAILABLE") || args.Data.Rapid == "")
+                    {
+                        rapid = 0;
+                    }
+                    else
+                    {
+                        rapid = int.Parse(args.Data.Rapid);
+                    }
+              
+                    args.Attributes.Add("style", $"background-color: {(rapid > 99 ? "#77ff77" : (args.Data.Rapid == null ? "#F0FFFA" : "#FF4040"))};");
+                }
+                catch
+                {
+                    args.Attributes.Add("style", $"background-color: {(args.Data.Rapid == "100" ? "#77ff77" : (args.Data.Rapid == null ? "#F0FFFA" : "#FF4040"))};");
+                }
+                break;
+            case "Feed":
+                try
+                {
+                    int feed = int.Parse(args.Data.Feed);
+                    args.Attributes.Add("style", $"background-color: {(feed > 99 ? "#77ff77" : (args.Data.Feed == null ? "#F0FFFA" : "#FF4040"))};");
+                }
+                catch
+                {
+                    args.Attributes.Add("style", $"background-color: {(args.Data.Feed == "100" ? "#77ff77" : (args.Data.Feed == null ? "#F0FFFA" : "#FF4040"))};");
+                }
+                break;
+            case "Spindle":
+                try
+                {
+                    int spindle = int.Parse(args.Data.Spindle);
+                    args.Attributes.Add("style", $"background-color: {(spindle > 99 ? "#77ff77" : (args.Data.Spindle == null ? "#F0FFFA" : "#FF4040"))};");
+                }
+                catch
+                {
+                    args.Attributes.Add("style", $"background-color: {(args.Data.Spindle == "100" ? "#77ff77" : (args.Data.Spindle == null ? "#F0FFFA" : "#FF4040"))};");
+                }
+                break;
+            case "Rapid2":
+                args.Attributes.Add("style", $"background-color: {(args.Data.Rapid2 == "100" ? "#77ff77" : (args.Data.Rapid2 == null ? "#F0FFFA" : "#FF4040"))};");
+                break;
+            case "Feed2":
+                try
+                {
+                    int feed2 = int.Parse(args.Data.Feed2);
+                    args.Attributes.Add("style", $"background-color: {(feed2 > 99 ? "#77ff77" : (args.Data.Feed2 == null ? "#F0FFFA" : "#FF4040"))};");
+                }
+                catch
+                {
+                    args.Attributes.Add("style", $"background-color: {(args.Data.Feed2 == "100" ? "#77ff77" : (args.Data.Feed2 == null ? "#F0FFFA" : "#FF4040"))};");
+                }
+                break;
+            case "Spindle2":
+                try
+                {
+                    int spindle2 = int.Parse(args.Data.Spindle2);
+                    args.Attributes.Add("style", $"background-color: {(spindle2 > 99 ? "#77ff77" : (args.Data.Spindle2 == null ? "#F0FFFA" : "#FF4040"))};");
+                }
+                catch
+                {
+                    args.Attributes.Add("style", $"background-color: {(args.Data.Spindle2 == "100" ? "#77ff77" : (args.Data.Spindle2 == null ? "#F0FFFA" : "#FF4040"))};");
+                }
+                break;
+            case "Gantry":
+                args.Attributes.Add("style", $"background-color: {(args.Data.Gantry == "100" ? "#77ff77" : (args.Data.Gantry == null ? "#F0FFFA" : "#FF4040"))};");
+                break;
+            default:
+
+                break;
+#pragma warning restore CS8604
+        }
+    }
+
+     void HeaderFooterCellRender(DataGridCellRenderEventArgs<MSR1_column> args)
+    {
+        if (args.Column.Property == "MachineID")
+        {
+            args.Attributes.Add("colspan", 2);
+        }
+    }
+
+}

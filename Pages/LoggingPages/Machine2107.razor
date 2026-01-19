@@ -1,0 +1,96 @@
+﻿@page "/Doosan2107"
+
+@using MTConnectDashboard
+@inject DeviceData Service1
+
+ <style>
+    body {
+        background-color: mintcream;
+    }
+</style>
+
+
+<PageTitle>Doosan 2107</PageTitle>
+<div style="margin-left:10px">
+<h3>Doosan Puma 2600LY II</h3>
+<p>Fetching data from the device.</p>
+
+
+@if(DataOutput.Mach2107.fail==true)
+{
+    <p>@DataOutput.Mach2107.failmessage</p>
+
+} 
+
+
+@if (data1 == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+       <p>@(DataOutput.Mach2107.rowhelper-1) Rows Loaded</p>
+       
+       <table class="table">
+        <thead>
+            <tr>
+                <th>Sequence</th>
+                <th>Date</th>
+                <th>ID</th>
+                <th>Value</th>
+                <th>Tag</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for(int n = tablesize-1; n>MaxRow; n--)
+            {
+                @if (data1 != null)
+                {
+                    
+                        #pragma warning disable
+                    foreach (var insert in data1[n])
+                    {
+                        <tr>
+                            <td>@insert.Sequence</td>
+                            <td>@insert.TimeStamp</td>
+                            <td>@insert.ID</td>
+                            <td>@insert.Value</td>
+                            <td>@insert.Tag</td>
+                        </tr>
+                    }
+                    #pragma warning restore
+                }
+            }
+        </tbody>
+    </table>
+}
+</div>
+  <button id="TableRefreshBUT" @onclick="OnInitializedAsync" hidden="true"> Refresh </button>
+
+
+@code{
+     public DataExtraction[]?[] data1 = new DataExtraction[5][];
+    
+	public static int tablesize = 2; // size of table
+    public static int displaysize = 0;
+
+    const int RowBuf = DataOutput.DataLimit; // the entries on the datatable will never surpass the row buffer
+    static int MaxRow = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        tablesize = DataOutput.Mach2107.rowhelper;//DataOutput.output2282.Length;
+        if (data1.Length != tablesize + 1)
+        {
+            Array.Resize(ref data1, tablesize+1); //set new row
+        }
+
+        for (int row = 0; row < tablesize; row++)
+        {
+            data1[row] = await Service1.GetDataAsync(row, DataOutput.Mach2107);
+             
+        }
+    }
+
+}

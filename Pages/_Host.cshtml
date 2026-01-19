@@ -1,0 +1,11 @@
+﻿@page "/"
+@namespace MTConnectDashboard.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+@using Radzen
+
+<component type="typeof(App)" render-mode="ServerPrerendered" />
+<script src="AutoRefresh.js"></script>
+<script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>

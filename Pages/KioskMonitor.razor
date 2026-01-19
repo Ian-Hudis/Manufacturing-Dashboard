@@ -1,0 +1,248 @@
+﻿@page "/KioskMonitor"
+
+
+@using MTConnectDashboard
+@inject MSR1_Service productService
+
+<style>
+    body {
+        background-color: rgb(240,255,250);
+    }
+
+    .rz-grid-table td {
+        padding: 0 !important;
+    }
+</style>
+
+<PageTitle>Main Page</PageTitle>
+<div style="margin-left:5px; text-align:center;">
+    @if (msr1_column == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <RadzenGrid AllowFiltering="false" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" style="justify-content: right; border: 1px solid #9999ff; background-color: #F0FFFA; display: inline-block; margin-top: 5px;"
+                    rowRender="@RowRender" cellRender="@CellRender" Density="@Density" HeaderCellRender="@HeaderFooterCellRender" FooterCellRender="@HeaderFooterCellRender"
+                    PageSize="17" AllowSorting="true" Data="@msr1_column" TItem="MSR1_column" ColumnWidth="90px" mnColumnWidth="150px" AllowColumnResize="true" AllowPaging="true">
+            <Columns>
+                <RadzenGridColumn TItem="MSR1_column" Property="MachineID" Title="Location" Width="110px"></RadzenGridColumn>
+
+                <RadzenGridColumn TItem="MSR1_column" Property="MachineMode" Title="MTC_HD1_State" Width="70px"> </RadzenGridColumn>
+                <RadzenGridColumn TItem="MSR1_column" Property="Kiosk_MTConnectState" Title="Kiosk_HD1_State" Width="70px"> </RadzenGridColumn>
+                <RadzenGridColumn TItem="MSR1_column" Property="TimeInState" Title="MTC_HD1_Duration" Width="70px"></RadzenGridColumn>
+
+                <RadzenGridColumn TItem="MSR1_column" Property="MachineMode2" Title="MTC_HD2_State" Width="70px"> </RadzenGridColumn>
+                <RadzenGridColumn TItem="MSR1_column" Property="Kiosk_MTConnectState2" Title="Kiosk_HD2_State" Width="70px"> </RadzenGridColumn>
+                <RadzenGridColumn TItem="MSR1_column" Property="TimeInState2" Title="MTC_HD2_Duration" Width="70px"></RadzenGridColumn>
+
+                <RadzenGridColumn TItem="MSR1_column" Property="PartCount" Title="MT_PC1" Width="50px"></RadzenGridColumn>
+                <RadzenGridColumn TItem="MSR1_column" Property="Kiosk_partcount" Title="Kiosk_PC1" Width="50px"></RadzenGridColumn>
+                <RadzenGridColumn TItem="MSR1_column" Property="PartCount2" Title="MT_PC2" Width="50px"></RadzenGridColumn>
+                <RadzenGridColumn TItem="MSR1_column" Property="Kiosk_partcount2" Title="Kiosk_PC2" Width="50px"></RadzenGridColumn>
+
+                <RadzenGridColumn TItem="MSR1_column" Property="Override" Title="O" Width="6px"></RadzenGridColumn>
+            </Columns>
+        </RadzenGrid>
+    }
+</div>
+<button id="TableRefreshBUT" @onclick="OnInitializedAsync" hidden="true"> Refresh </button>
+
+@code {
+    IEnumerable<MSR1_column>? msr1_column;
+
+    protected override async Task OnInitializedAsync()
+    {
+        msr1_column = await Task.Run(() => productService.ProductList());
+    }
+
+    Density Density;
+
+    void RowRender(RowRenderEventArgs<MSR1_column> args)  // controls the font
+    {
+        Density = Density.Compact;
+        args.Attributes.Add("style", $"font-weight: {("bold")};");
+    }
+
+    void CellRender(CellRenderEventArgs<MSR1_column> col)  // controls the color
+    {
+        if (col.Column.Property == "MachineID")
+        {
+            switch (col.Data.ProductionMonitorState)
+            {
+                // make it green
+                case "RUNNING":
+                    col.Attributes.Add("style", $"font-weight: {("730")};" +
+                        $"background-image: linear-gradient(180deg, #E0ffE5 0%, #78ff85 100%);"); // green
+                    break;
+                case "LOADING": // the operator is loading a part
+                    col.Attributes.Add("style", $"font-weight: {("730")};" +
+                        $"background-image: linear-gradient(180deg, #E0ffE5 0%, #78ff85 100%);"); // green
+                    break;
+                // make it yellow
+                case "Setup":
+                    if (col.Data.MachineMode != "OFFLINE" || col.Data.MachineMode != "PGM_STOP" || col.Data.MachineMode != "INTERUPT")
+                    {
+                        col.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #fff9E0 0%, #ffff10 100%);"); // yellow
+                    }
+                    else
+                    {
+                        col.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #ffE0E0 0%, #FF4242 100%);"); // red
+                    }
+                    break;
+                case "Insp/Tlch":
+                    if (col.Data.MachineMode != "OFFLINE" || col.Data.MachineMode != "PGM_STOP" || col.Data.MachineMode != "INTERUPT")
+                    {
+                        col.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #fff9E0 0%, #ffff10 100%);"); // yellow
+                    }
+                    else
+                    {
+                        col.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #ffE0E0 0%, #FF4242 100%);"); // red
+                    }
+                    break;
+                case "Ready":
+                    if (col.Data.MachineMode != "OFFLINE" || col.Data.MachineMode != "PGM_STOP" || col.Data.MachineMode != "INTERUPT")
+                    {
+                        col.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #fff9E0 0%, #ffff10 100%);"); // yellow
+                    }
+                    else
+                    {
+                        col.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #ffE0E0 0%, #FF4242 100%);"); // red
+                    }
+                    break;
+                // make it red
+                default:
+                    col.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #ffE0E0 0%, #FF4242 100%);"); // red
+                    break;
+            }
+                    /*
+                    case "RUNNING":
+                    col.Attributes.Add("style", $"font-weight: {("730")};" +
+            $"background-image: linear-gradient(180deg, #E0ffE5 0%, #78ff85 100%);");
+                break;
+                case "LOADING": // the operator is loading a part
+                    col.Attributes.Add("style", $"font-weight: {("730")};" +
+            $"background-image: linear-gradient(180deg, #E0ffE5 0%, #78ff85 100%);");
+                break;
+                    case "IDLE":
+                    col.Attributes.Add("style", $"font-weight: {("730")};" +
+                $"background-image: linear-gradient(180deg, #fff9E0 0%, #ffff10 100%);");
+                break;
+                case "FEED_HOLD":
+                    col.Attributes.Add("style", $"font-weight: {("730")};" +
+                $"background-image: linear-gradient(180deg, #fff9E0 0%, #ffff10 100%);");
+                break;
+                case "MANUAL":
+                    col.Attributes.Add("style", $"font-weight: {("730")};" +
+                    $"background-image: linear-gradient(180deg, #E0E4ff 0%, #10EEFF 100%);");
+                break;
+                case "OFFLINE":
+                if (col.Data.ProductionMonitorState == "OFFLINE" || col.Data.ProductionMonitorState == "No Job/Op")
+                    {
+                    col.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #ffE0E0 0%, #B6B6B6 100%);");
+                }
+                    else
+                    {
+                    col.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #ffE0E0 0%, #FF4242 100%);");
+                }
+            break;
+                default:
+                col.Attributes.Add("style", $"font-weight: {("730")};" + $"background-image: linear-gradient(180deg, #ffE0E0 0%, #FF4242 100%);");
+                break;
+                */
+
+        }
+        else if (col.Column.Property == "TimeInState")
+        {
+            if (col.Data.MachineMode == "OFFLINE" || col.Data.MachineMode == "PGM_STOP" || col.Data.MachineMode == "INTERUPT")
+            {
+                col.Attributes.Add("style", $"background-color: {((col.Data.ProductionMonitorState == "OFFLINE" || col.Data.ProductionMonitorState == "No Job/Op") ? "#BABABA" : "#FF4040")};");
+
+            }
+            else
+            {
+                col.Attributes.Add("style", $"background-color: {(col.Data.MachineMode == "RUNNING" || col.Data.MachineMode == "LOADING" ? "#77ff77" : (col.Data.MachineMode == "MANUAL" ? "#00EEFF" : "#ffff00"))};");
+            }
+        }
+        else if (col.Column.Property == "TimeInState2")
+        {
+            if (col.Data.MachineMode2 == "OFFLINE" || col.Data.MachineMode2 == "PGM_STOP" || col.Data.MachineMode2 == "INTERUPT")
+            {
+                col.Attributes.Add("style", $"background-color: {((col.Data.ProductionMonitorState == "OFFLINE" || col.Data.ProductionMonitorState == "No Job/Op") ? "#BABABA" : "#FF4040")};");
+
+            }
+            else if (col.Data.MachineMode2 == "N/A")
+            {
+                col.Attributes.Add("style", $"background-color: #F0FFFA;");
+            }
+            else
+            {
+                col.Attributes.Add("style", $"background-color: {(col.Data.MachineMode2 == "RUNNING" || col.Data.MachineMode2 == "LOADING" ? "#77ff77" : (col.Data.MachineMode2 == "MANUAL" ? "#00EEFF" : "#ffff00"))};");
+            }
+        }
+        //state check
+        if (col.Column.Property == "MachineMode" || col.Column.Property == "Kiosk_MTConnectState")
+        {
+            if (col.Data.MachineMode == col.Data.Kiosk_MTConnectState)
+            {
+                col.Attributes.Add("style", $"background-color: {("#10FF10")};");
+            }
+            else
+            {
+                col.Attributes.Add("style", $"background-color: {("#FF1010")};");
+            }
+        }
+        // state 2 check 
+        if (col.Column.Property == "MachineMode2" || col.Column.Property == "Kiosk_MTConnectState2")
+        {
+            if (col.Data.MachineMode2 == col.Data.Kiosk_MTConnectState2)
+            {
+                col.Attributes.Add("style", $"background-color: {("#10FF10")};");
+            }
+            else
+            {
+                col.Attributes.Add("style", $"background-color: {("#FF1010")};");
+            }
+        }
+        // partcount 1
+        if (col.Column.Property == "PartCount" || col.Column.Property == "Kiosk_partcount")
+        {
+            if (col.Data.PartCount == col.Data.Kiosk_partcount)
+            {
+                col.Attributes.Add("style", $"background-color: {("#10FF10")};");
+            }
+            else
+            {
+                col.Attributes.Add("style", $"background-color: {("#FF1010")};");
+            }
+        }
+        // partcount 2
+        if (col.Column.Property == "PartCount2" || col.Column.Property == "Kiosk_partcount2")
+        {
+            if (col.Data.PartCount2 == col.Data.Kiosk_partcount2)
+            {
+                col.Attributes.Add("style", $"background-color: {("#10FF10")};");
+            }
+            else
+            {
+                col.Attributes.Add("style", $"background-color: {("#FF1010")};");
+            }
+        }
+
+        // override
+        if (col.Column.Property == "Override")
+        {
+            col.Attributes.Add("style", $"background-color: {(col.Data.Override != false ? "#FF4040" : "#7777ff")};");
+        }
+
+    }
+
+    void HeaderFooterCellRender(DataGridCellRenderEventArgs<MSR1_column> args)
+    {
+        if (args.Column.Property == "MachineID")
+        {
+            args.Attributes.Add("colspan", 2);
+        }
+    }
+
+}
