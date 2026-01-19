@@ -1,0 +1,93 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>MTConnectDashboard</PageTitle>
+
+<style>
+    .MenuButton,
+    .MenuButton:hover {
+        color: whitesmoke;
+        color: whitesmoke;
+        background-color: #002050;
+        outline-style:hidden;
+        
+        outline: none;
+        min-width: 250px;
+        height: 2rem;
+    }
+</style>
+ <div class="top-row px-4" style="min-height:10px;">
+    <button Class="MenuButton" @onclick="Toggle"> + </button>
+    <p2 style="margin-left:20%; display:inline-block;"> @DateTime.Now.ToString("dddd")</p2>
+    <p2 style="margin-left:40px; display:inline-block; min-width:160px"> @DateTime.Now.ToString("hh:mm tt")</p2>
+    <p2 style="margin-left:20px; display:inline-block;"> @DateTime.Now.ToString("yyyy/MM/dd")</p2> 
+    <p2 style="margin-left:25%; display:inline-block;"> V5.3</p2>
+</div>
+
+<div class="page">
+    <div class="sidebar @NavBarClass">
+        <NavMenu />
+    </div>
+
+    <main>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+<button id="TableRefreshMainPage" @onclick="OnInitializedAsync" hidden="true"> Refresh </button>
+
+@code {
+    //! for menu status
+#pragma warning disable CS0414
+    private string menustatus = "Hide";
+#pragma warning disable CS0414
+    private bool _navBarVisible = false;
+
+    public Action? OnChanged { get; set; }
+
+    //Change state by click on the button
+    public void Toggle()
+    {
+        _navBarVisible = !_navBarVisible;//Change
+
+        if (_navBarVisible)
+        {
+            menustatus = "Hide";
+        }
+        else
+        {
+            menustatus = "Show";
+        }
+
+        if (OnChanged != null) OnChanged();//Callback for reload
+    }
+
+    //get additional css class for nav bar div
+    public string NavBarClass
+    {
+        get
+        {
+            if (_navBarVisible) return String.Empty;//No additional css class for show nav bar
+            return "d-none";//d-none class will hide the div
+        }
+    }
+    //! for menu status
+
+#pragma warning disable CS1998
+    protected override async Task OnInitializedAsync()
+    {
+        OnChanged = () =>
+        {
+            StateHasChanged();//Refresh
+        };
+    }
+
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; } = default!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeVoidAsync("AutoRefresh.refreshMTconnectData");
+    }
+}

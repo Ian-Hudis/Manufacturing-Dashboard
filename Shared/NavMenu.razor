@@ -1,0 +1,160 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">Dashboard Menu</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-2">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-clipboard" aria-hidden="true"></span> Mach Dashboard
+            </NavLink>
+        </div>
+        <div class="nav-item px-2" style="margin-left: 10px">
+            <NavLink class="nav-link" href="OverRide">
+                <span class="oi oi-dashboard" aria-hidden="true"></span> Overrides
+            </NavLink>
+        </div>
+        <div class="nav-item px-2" style="margin-left: 10px">
+            <NavLink class="nav-link" href="moreinfo">
+                <span class="oi oi-briefcase" aria-hidden="true"></span> More Info
+            </NavLink>
+        </div>
+        <div class="nav-item px-2" style="margin-left: 10px">
+            <NavLink class="nav-link" href="prediction">
+                <span class="oi oi-clipboard" aria-hidden="true"></span> Prediction
+            </NavLink>
+        </div>
+        <div class="nav-item px-2" style="margin-left: 10px">
+            <NavLink class="nav-link" href="progress">
+                <span class="oi oi-bookmark" aria-hidden="true"></span> Progress
+            </NavLink>
+        </div>
+        <div class="nav-item px-2" style="margin-left: 10px">
+            <NavLink class="nav-link" href="SAP">
+                <span class="oi oi-cloud" aria-hidden="true"></span> SAP Data
+            </NavLink>
+        </div>
+        <div class="nav-item px-2" style="margin-left: 10px">
+            <NavLink class="nav-link" href="KioskMonitor">
+                <span class="oi oi-badge" aria-hidden="true"></span> Kiosk Monitor
+            </NavLink>
+        </div>
+        <div class="nav-item px-2">
+            <NavLink class="nav-link" href="OriginalDashboard" Match="NavLinkMatch.All">
+                <span class="oi oi-clipboard" aria-hidden="true"></span> Old Dashboard
+            </NavLink>
+        </div>
+        <div class="nav-item px-2">
+            <NavLink class="nav-link" href="Testing" Match="NavLinkMatch.All">
+                <span class="oi oi-clipboard" aria-hidden="true"></span> Feature Testing
+            </NavLink>
+        </div>
+        <!--
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" Match="NavLinkMatch.All" @onclick="()=>MazakList = !MazakList">
+                <span class="oi oi-folder" aria-hidden="true"></span> Mazak Logs
+            </NavLink>
+            @if (MazakList)
+            {
+                <div class="nav-item px-2">
+                    <NavLink class="nav-link" href="Mazak2283">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Machine2283
+                    </NavLink>
+                </div>
+                <div class="nav-item px-2">
+                    <NavLink class="nav-link" href="Mazak2282">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Machine2282
+                    </NavLink>
+                </div>
+                <div class="nav-item px-2">
+                    <NavLink class="nav-link" href="Mazak2281">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Machine2281
+                    </NavLink>
+                </div>
+                <div class="nav-item px-2">
+                    <NavLink class="nav-link" href="Mazak2280">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Machine2280
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-2">
+                    <NavLink class="nav-link" href="Mazak2260">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Machine2260
+                    </NavLink>
+                </div>
+                <div class="nav-item px-2">
+                    <NavLink class="nav-link" href="Mazak2111">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Machine2111
+                    </NavLink>
+                </div>
+            }
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" Match="NavLinkMatch.All" @onclick="()=> DoosanList = !DoosanList">
+                <span class="oi oi-folder" aria-hidden="true"></span> Doosan Logs
+            </NavLink>
+            @if (DoosanList)
+            {
+
+                <div class="nav-item px-2">
+                    <NavLink class="nav-link" href="Doosan2271">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Machine2271
+                    </NavLink>
+                </div>
+                <div class="nav-item px-2">
+                    <NavLink class="nav-link" href="Doosan2107">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Machine2107
+                    </NavLink>
+                </div>
+            }
+        </div>
+
+                <div class="nav-item px-3">
+            <NavLink class="nav-link" Match="NavLinkMatch.All" @onclick="()=> HaasList = !HaasList">
+                <span class="oi oi-folder" aria-hidden="true"></span> HAAS Logs
+            </NavLink>
+            @if (HaasList)
+            {
+                <div class="nav-item px-2">
+                    <NavLink class="nav-link" href="HAAS2105">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Machine2105
+                    </NavLink>
+                </div>
+                <div class="nav-item px-2">
+                    <NavLink class="nav-link" href="HAAS2103">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Machine2103
+                    </NavLink>
+                </div>
+                <div class="nav-item px-2">
+                    <NavLink class="nav-link" href="HAAS2102">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Machine2102
+                    </NavLink>
+                </div>
+            }
+        </div>
+        -->
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    //private bool MazakList = false;
+
+    //private bool DoosanList = false;
+
+    //private bool HaasList = false;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
