@@ -8,3 +8,8 @@ It basically breaks down to 4 components:
 2. The Kiosk Data Grab
 3. Displaying the data onto a dashboard (see below)
 4. Logging the Data into SQL.
+
+
+
+Snapshot of the output SQL DATA:
+<img width="1538" height="550" alt="image" src="https://github.com/user-attachments/assets/96788484-48ef-4c85-ac01-7f3a24d5c0d8" />
